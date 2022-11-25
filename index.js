@@ -21,11 +21,20 @@ async function run(){
     try{
 
         const categoriesCollection = client.db("carCruiseBD").collection("carCategories");
+        const productsCollection = client.db("carCruiseBD").collection("carProducts");
 
         app.get('/categories', async (req, res) =>{
             const query = {};
             const categories = await categoriesCollection.find(query).toArray();
             res.send(categories);
+        });
+
+        app.get('/category/:id', async (req, res) =>{
+            const id = req.params.id;
+            console.log('api kam kortese', id);
+            const query = { categoryId: id };
+            const products = await productsCollection.find(query).toArray();
+            res.send(products);
         })
 
     }
