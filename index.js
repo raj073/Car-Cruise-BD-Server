@@ -16,6 +16,27 @@ console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
+async function run(){
+
+    try{
+
+        const categoriesCollection = client.db("carCruiseBD").collection("carCategories");
+
+        app.get('/categories', async (req, res) =>{
+            const query = {};
+            const categories = await categoriesCollection.find(query).toArray();
+            res.send(categories);
+        })
+
+    }
+
+    finally{
+
+    }
+
+}
+
+run().catch(console.log);
 
 
 app.get('/', async(req, res) => {
