@@ -50,7 +50,14 @@ async function run(){
             const query = {email};
             const user = await usersCollection.findOne(query);
             res.send({isSeller: user?.role === 'Seller'});
-        })
+        });
+
+        app.get('/users/buyer/:email', async(req, res) =>{
+            const email = req.params.email;
+            const query = {email};
+            const user = await usersCollection.findOne(query);
+            res.send({isBuyer: user?.role === 'Buyer'});
+        });
 
         app.post('/bookings', async(req, res) => {
             const bookings = req.body;
