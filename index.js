@@ -12,7 +12,6 @@ app.use(express.json());
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.rcsgtvg.mongodb.net/?retryWrites=true&w=majority`;
-console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
@@ -23,6 +22,7 @@ async function run(){
         const categoriesCollection = client.db("carCruiseBD").collection("carCategories");
         const productsCollection = client.db("carCruiseBD").collection("carProducts");
         const bookingsCollection = client.db("carCruiseBD").collection("carBookings");
+        const usersCollection = client.db("carCruiseBD").collection("users");
         
 
         app.get('/categories', async (req, res) =>{
@@ -38,11 +38,26 @@ async function run(){
             res.send(products);
         });
 
+        app.get('/users/admin/:email', async(req, res) =>{
+            const email = req.params.email;
+            const query = {email};
+            const user = await usersCollection.findOne(query);
+            res.send({isAdmin: user?.role === 'Admin'});
+        })
+
         app.post('/bookings', async(req, res) => {
             const bookings = req.body;
             const result = await bookingsCollection.insertOne(bookings);
             res.send(result);
-        })
+        });
+
+        app.post('/users', async(req, res) => {
+            const users = req.body;
+            const result = await usersCollection.insertOne(users);
+            res.send(result);
+        });
+
+
 
     }
 
