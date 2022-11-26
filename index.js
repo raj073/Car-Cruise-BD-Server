@@ -22,6 +22,8 @@ async function run(){
 
         const categoriesCollection = client.db("carCruiseBD").collection("carCategories");
         const productsCollection = client.db("carCruiseBD").collection("carProducts");
+        const bookingsCollection = client.db("carCruiseBD").collection("carBookings");
+        
 
         app.get('/categories', async (req, res) =>{
             const query = {};
@@ -31,10 +33,16 @@ async function run(){
 
         app.get('/category/:id', async (req, res) =>{
             const id = req.params.id;
-            console.log('api kam kortese', id);
             const query = { categoryId: id };
             const products = await productsCollection.find(query).toArray();
             res.send(products);
+        });
+
+        app.post('/bookings', async(req, res) => {
+            const booking = req.body;
+            const query = {};
+            const result = await bookingsCollection.insertOne(query);
+            res.send(result);
         })
 
     }
