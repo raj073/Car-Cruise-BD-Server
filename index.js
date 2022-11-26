@@ -59,6 +59,13 @@ async function run(){
             res.send({isBuyer: user?.role === 'Buyer'});
         });
 
+        app.get('/orders', async (req, res) => {
+            const email = req.query.email;
+            const query = {email: email};
+            const orders = await bookingsCollection.find(query).toArray();
+            res.send(orders);
+        })
+
         app.post('/bookings', async(req, res) => {
             const bookings = req.body;
             const result = await bookingsCollection.insertOne(bookings);
