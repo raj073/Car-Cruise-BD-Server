@@ -65,12 +65,12 @@ async function run(){
             const seller = await usersCollection.find(query).toArray();
             res.send(seller)
         });
-        
-        //Get All Seller
-        app.get('/users/allseller', async (req, res) => {
-            const query = { role: 'Seller' };
-            const seller = await usersCollection.find(query).toArray();
-            res.send(seller)
+
+        //Get All Buyer
+        app.get('/users/allbuyer', async (req, res) => {
+            const query = { role: 'Buyer' };
+            const buyer = await usersCollection.find(query).toArray();
+            res.send(buyer)
         });
 
         app.get('/orders', async (req, res) => {
