@@ -64,7 +64,22 @@ async function run(){
             const query = {email: email};
             const orders = await bookingsCollection.find(query).toArray();
             res.send(orders);
-        })
+        });
+
+        // Get Car Categories API
+        app.get('/addProductCategories', async (req, res) => {
+            const query = {}
+            const result = await categoriesCollection.find(query).project({ categoryId: 1, name: 1 }).toArray();
+            res.send(result);
+        });
+
+        //Add Product API
+        app.post('/addProducts', async (req, res) => {
+            const products = req.body;
+            console.log(products);
+            const result = await productsCollection.insertOne(products);
+            res.send(result);
+        });
 
         app.post('/bookings', async(req, res) => {
             const bookings = req.body;
