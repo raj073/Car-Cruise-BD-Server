@@ -74,6 +74,16 @@ async function run(){
 
         app.post('/users', async(req, res) => {
             const users = req.body;
+            console.log(users);
+
+            //If users exists with same email address
+            const query = {email: users.email};
+            const alreadyLoggedIn = await usersCollection.find(query).toArray();
+            if(alreadyLoggedIn.length){
+                const message = `Already Registered with Email ${users.email}`;
+                return res.send({ acknowledged: false, message })
+            }
+
             const result = await usersCollection.insertOne(users);
             res.send(result);
         });
