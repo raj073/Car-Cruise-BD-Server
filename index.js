@@ -59,6 +59,20 @@ async function run(){
             res.send({isBuyer: user?.role === 'Buyer'});
         });
 
+        //Get All Seller
+        app.get('/users/allseller', async (req, res) => {
+            const query = { role: 'Seller' };
+            const seller = await usersCollection.find(query).toArray();
+            res.send(seller)
+        });
+        
+        //Get All Seller
+        app.get('/users/allseller', async (req, res) => {
+            const query = { role: 'Seller' };
+            const seller = await usersCollection.find(query).toArray();
+            res.send(seller)
+        });
+
         app.get('/orders', async (req, res) => {
             const email = req.query.email;
             const query = {email: email};
@@ -80,7 +94,8 @@ async function run(){
             const query = { email: req.query.email };
             const doctors = await productsCollection.find(query).toArray();
             res.send(doctors);
-        })
+        });
+        
 
         //Add Product API
         app.post('/addProducts', async (req, res) => {
@@ -118,7 +133,15 @@ async function run(){
         const filter = {_id: ObjectId(id)};
         const result = await productsCollection.deleteOne(filter);
         res.send(result);
-        })
+        });
+
+        //Seller Delete API
+        app.delete('/users/:id', async (req, res) => {
+        const id = req.params.id;
+        const filter = {_id: ObjectId(id)};
+        const result = await usersCollection.deleteOne(filter);
+        res.send(result);
+        });
 
 
 
