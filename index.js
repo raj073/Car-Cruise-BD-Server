@@ -73,12 +73,21 @@ async function run(){
             res.send(buyer)
         });
 
+        // Get All Order
         app.get('/orders', async (req, res) => {
             const email = req.query.email;
             const query = {email: email};
             const orders = await bookingsCollection.find(query).toArray();
             res.send(orders);
         });
+
+        //Id Wise Order Load from pay button click
+        app.get('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const order = await bookingsCollection.findOne(query);
+            res.send(order);
+        })
 
         // Get Car Categories API
         app.get('/addProductCategories', async (req, res) => {
@@ -142,6 +151,7 @@ async function run(){
         const result = await usersCollection.deleteOne(filter);
         res.send(result);
         });
+
 
 
 
