@@ -264,13 +264,29 @@ async function run() {
       const updatedDoc = {
         $set: {
           paid: true,
-          transactionId: payment.transactionId,
+          transactionId: payment.transactionId
         },
       };
+      console.log(id, filter, updatedDoc);
       const updatedResult = await bookingsCollection.updateOne(
         filter,
         updatedDoc
       );
+
+      //update product table
+      const productId = payment.productId;
+      const productFilter = { _id: ObjectId(productId) };
+      console.log(productId);
+      const updatedDocForProduct = {
+          $set: {
+            paid: true,
+            transactionId: payment.transactionId
+          }
+      }
+      const productResult = await productsCollection.updateOne(productFilter, updatedDocForProduct);
+      console.log('in the payment section', productResult);
+
+
       res.send(result);
     });
 
