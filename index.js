@@ -100,7 +100,6 @@ async function run() {
     // Get All Wishlist by query email address
     app.get("/wishlist-products", async (req, res) => {
       const email = req.query.email;
-      console.log('--', email);
       const query = { wishlistEmail: email, wishlist: "yes" };
       const wishlist = await productsCollection.find(query).toArray();
       res.send(wishlist);
@@ -207,7 +206,7 @@ async function run() {
       const updatedProduct = {
         $set: {
           wishlist: "yes",
-          wishlistEmail: email
+          wishlistEmail: email,
         },
       };
       const result = await productsCollection.updateOne(
@@ -292,6 +291,45 @@ async function run() {
         filter,
         updatedDoc
       );
+      res.send(result);
+    });
+
+    //verify seller
+    app.put("/seller/verify", async (req, res) => {
+      const id = req.query.id;
+      const email = req.query.email;
+      const filter = { _id: ObjectId(id) };
+      console.log(id, email, filter);
+      const options = { upsert: true };
+      const verifiedSeller = {
+        $set: {
+          verification: "verified",
+        },
+      };
+      const result = await usersCollection.updateOne(
+        filter,
+        verifiedSeller,
+        options
+      );
+
+      //update product table for verifying
+      const queryForProducts = { email: email };
+      const anyProductForEmail = await productsCollection
+        .find(queryForProducts)
+        .toArray();
+      if (anyProductForEmail?.length > 0) {
+        const verifiedProductsDoc = {
+          $set: {
+            verification: "verified",
+          },
+        };
+        await productsCollection.updateMany(
+          queryForProducts,
+          verifiedProductsDoc,
+          options
+        );
+      }
+
       res.send(result);
     });
   } finally {
